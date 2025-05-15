@@ -43,6 +43,13 @@ return_sequence=True면 모든 은닉값이 출력되느로 각 배치별 (10,3)
 return_sequence=False면 마지막 하나의 은닉값인 (3,)이고 최종 결과는 (1,32,3)
 
 
+
+______
+__________
+_____________
+사용법
+
+
 -이진분류: 손실함수로 binary_crossentropy사용: 값이 클수록 손실큼
   클래스 1에 대한 손실= -log(h)
   클래스 0에 대한 손실= -log(1-h)
@@ -51,5 +58,46 @@ return_sequence=False면 마지막 하나의 은닉값인 (3,)이고 최종 결�
   정답이 [0,0,1,0]과 같은 원핫인코딩인경우 손실함수는 categorical_crossentropy 
   정답이 정수인 경우 손실함수로 sparse_categorical_crossentropy
   정답이 범주형 문자면 레이블 인코딩이나 원핫인코딩필요
-정답이 [0, 1, 0]이고 소프트맥스통과z값이 [0.2, 0.7, 0.1]이면 손실= -log(0.7)
+정답이 [0, 1, 0]이고 소프트맥스통과z값이 [0.2, 0.7, 0.1]이면 손실= -log(0.7) = 0.3567
+정답이 [0, 0, 1]인데 [0.2, 0.7, 0.1]로 나오면 손실= -log(0.1) = 2.3026
+
+
+1. DNN
+from tensorflow import keras
+데이터 준비: (x_train,y_train),(x_test,y_test)=keras.datasets.fashion_mnist.load_data() -> 10개 이미지화
+-> x_train, y_train에서 validation세트 20%로 분리
+model=keras.Sequential()
+model.add(keras.layers.Flatten(input_shape=(28,28))) #원래 1차원이면 필요X
+model.add(keras.layers.Dense(100,activation='relu',name='hidden')) #flatten없으면 input_shape=(n*n,), relu나 sigmoid
+model.add(keras.layers.Dropout(0.2~0.5))  #규제할 층 바로 다음에 add, 파라미터는 내가 정함 
+model.add(keras.layers.Dense(10,activation='softmax',name='output')) #마지막 층은 반드시 sigmoid or softmax or linear(회귀모델)
+model.summary() #로 구조, 정보 확 
+model.compile(optimizer='adam',            #여기 옵티마이저에 위의 'adam값 넣어 설정
+              loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+               # binary or categorical or sparse_categorical (crossentropy)
+-----------------------추가 옵션(안해도 됨) 콜백 (훈련과정 중간에 어떤 작업을 수행하게 해주는 객체)----------------------------
+checkpoint_cb=keras.callbacks.ModelCheckpoint('best-model.h5', save_best_only=True)  #모델 훈련 후에 제일좋은 모델 best-model.h5로 저장
+early_stopping_cb=keras.callbacks.EarlyStopping(patience=2,restore_best_weights=True) #patience=2 검증점수 향상되지 않아도 2번 기다려줌
+-------------------------------------------------------------------------------------------------------------------
+#설정해주고 fit할때 callbacks에 넣기
+history=model.fit(x_train,y_train,epochs=20,verbose=0 or 1,validation_data=(x_val,y_val),  #0하면 훈련과정 안보임
+                  callbacks=[checkpoint_cb,early_stopping_cb])   # .fit에 callbacks옵션에 만들어 둔 객체 넣어줌
+# 1.그래프 그리고 최적의 epochs값 결정 or 2.early stopping시 best model불러와 사용 
+plt.plot(history.history['loss'])    vs    plt.plot(history.history['val_loss'])  # 각 횟수별 손실
+plt.plot(history.history['accuracy'])  vs   plt.plot(history.history['val_accuracy'])
+early_stopping_cb.stopped_epoch #으로 어디서 멈췄는지 확인가능 
+#베스트모델 불러와 평가 or 콜백 안했으면 그래프 통해 정한 epoch로 학습하고 그 model로 평가 
+bestmodel=keras.models.load_model('best-model.h5')
+bestmodel.evaluate(x_val,y_val)
+bestmodel.predict(x_test[0:5]) -> np.argmax(prediction, axis=1), y_test[0:5]로 비교
+#모델 저장
+1. model.save_weights('이름.weights.h5')  #모델의 가중치만 저장/ 구조 없음
+2. model.save('이름.h5')  #모델의 구조+ 가중치+옵티마이저+손실함수+metircs저장 
+# 저장한 모델 불러오기
+1. model구조생성-> model.load_weights('이름.weights.h5') -> fit없이 바로 predict가능
+2. model=keras.models.load_model('이름.h5') -> 바로 predict, evaluate
+
+
+
+
 
