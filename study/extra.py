@@ -62,7 +62,7 @@ _____________
 정답이 [0, 0, 1]인데 [0.2, 0.7, 0.1]로 나오면 손실= -log(0.1) = 2.3026
 
 
-1. DNN
+1. DNN(밀집층)
 from tensorflow import keras
 데이터 준비: (x_train,y_train),(x_test,y_test)=keras.datasets.fashion_mnist.load_data() -> 10개 이미지화
 ->0~255값 사이면 255로 나눠 0~1로 정규화 -> x_train, y_train에서 validation세트 20%로 분리 
@@ -101,4 +101,27 @@ bestmodel.predict(x_test[0:5]) -> np.argmax(prediction, axis=1), y_test[0:5]로 
 
 
 
+2. CNN(합성곱층) 
+입력->패딩->필터의 커널이 입력에 가해짐->특성맵생성->풀링으로 축소->1차원화->밀집층 
+샘플하나당 입력차원배열이 n차원 배열이면 필터도 n차원 배열, 필터하나 찍을때마다 스칼라값 하나 
+입력층크기의 (a,b) = 특성맵 크기의 (a,b,n)  
+필터의 개수 n = 뉴런의 개수 n = 특성맵 크기( , , n)  
+stride=(a,b)에서 a,b가 많이 차이나는 경우는 이미지의 가로세로 크기가 많이 다를때
 
+합성곱층과 예시
+--conv1d: 텍스트, 주식 데이터등의 용도
+    데이터 전처리크기=(batch_size,timesteps,channels)
+    input_shape -> model.add(Conv1D(filters=32, kernel_size=3, input_shape=(timesteps,channels))
+        !!! 결국 100행(샘플수) 5열(특성수) 짜리의 (100,5) 데이터는 (100,5,1)로 reshape해서 넣음 !!!
+                             
+--conv2d: 흑백이미지 or 컬러이미지 
+    데이터 전처리크기=(batch_size, height, width, channels) #흑백: channels=1, 컬러:channels=3(rgb)
+    input_shape -> model.add(Conv2D(filters=32, kernel_size=(3, 3), input_shape=(행,열,1 or 3))
+        !!! 결국 100개샘플의 세로28, 가로28짜리의 (100,28,28)은 (100,28,28,1)로 변환해 넣음 !!!
+        !!! 원래 컬러이미지는 (100,28,28,3)의 형태라 변환필요X !!!
+
+--conv3d: 영상데이터, 3D 의료영상
+    데이터 전처리크기=(batch_size, depth, height, width, channels)
+    input_shape -> model.add(Conv3D(filters=32, kernel_size=(3, 3, 3), input_shape=(깊이(시간), 행, 열,3))) 
+        !!! 흑백영상 하나받은면 주로 (3600,28,28,1) 이면 영상 하나이므로 (1,3600,28,28,1) 로 변환!!!
+        !!! 컬러영상 100개 받으면 (100,3600,28,28,3)이어서 변환필요 X
