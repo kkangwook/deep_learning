@@ -65,7 +65,8 @@ _____________
 1. DNN
 from tensorflow import keras
 데이터 준비: (x_train,y_train),(x_test,y_test)=keras.datasets.fashion_mnist.load_data() -> 10개 이미지화
--> x_train, y_train에서 validation세트 20%로 분리 ->데이터 들어갈때 보통 (100샘플수, 28*28)의 2차원 배열로 들어감
+->0~255값 사이면 255로 나눠 0~1로 정규화 -> x_train, y_train에서 validation세트 20%로 분리 
+->데이터 들어갈때 보통 (100샘플수, 28*28)의 2차원 배열로 들어감
 model=keras.Sequential()
 model.add(keras.layers.Flatten(input_shape=(28,28))) #원래 1차원이면 필요X 
 model.add(keras.layers.Dense(100,activation='relu',name='hidden')) #flatten없으면 input_shape=(n*n,), relu나 sigmoid
