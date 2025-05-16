@@ -107,6 +107,7 @@ bestmodel.predict(x_test[0:5]) -> np.argmax(prediction, axis=1), y_test[0:5]로 
 입력층크기의 (a,b) = 특성맵 크기의 (a,b,n)  
 필터의 개수 n = 뉴런의 개수 n = 특성맵 크기( , , n)  
 stride=(a,b)에서 a,b가 많이 차이나는 경우는 이미지의 가로세로 크기가 많이 다를때
+이미지에서 depth=시간, height=세로픽셀, width=가로필셀, channels=RGB or Black/White
 
 합성곱층과 예시
 --conv1d: 텍스트, 주식 데이터등의 용도
@@ -118,10 +119,42 @@ stride=(a,b)에서 a,b가 많이 차이나는 경우는 이미지의 가로세�
     데이터 전처리크기=(batch_size, height, width, channels) #흑백: channels=1, 컬러:channels=3(rgb)
     input_shape -> model.add(Conv2D(filters=32, kernel_size=(3, 3), input_shape=(행,열,1 or 3))
         !!! 결국 100개샘플의 세로28, 가로28짜리의 (100,28,28)은 (100,28,28,1)로 변환해 넣음 !!!
-        !!! 원래 컬러이미지는 (100,28,28,3)의 형태라 변환필요X !!!
+        !!! 원래 컬러이미지는 (100,28,28,3)의 형태라 변환필요X  커널사이즈도 (3,3)그대로 쓰면 알아서 (3,3,3)됨->가중치는 3*3*3개!!!
 
 --conv3d: 영상데이터, 3D 의료영상
     데이터 전처리크기=(batch_size, depth, height, width, channels)
     input_shape -> model.add(Conv3D(filters=32, kernel_size=(3, 3, 3), input_shape=(깊이(시간), 행, 열,3))) 
         !!! 흑백영상 하나받은면 주로 (3600,28,28,1) 이면 영상 하나이므로 (1,3600,28,28,1) 로 변환!!!
-        !!! 컬러영상 100개 받으면 (100,3600,28,28,3)이어서 변환필요 X
+        !!! 컬러영상 100개 받으면 (100,3600,28,28,3)이어서 변환필요 X  또한 커널사이즈도 (3,3,3)하면 자동으로 (3,3,3,3)-> 가중치 3*3*3*3개 !!!
+
+
+@@@코드  
+데이터: (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
+-> x_train.reshape(-1, 28, 28, 1)하고 255로 나누기하고 validation 세트 20%로 나누기 
+# 컬러이미지는 이미 (-1,28,28,3)의 형태
+model = keras.Sequential()
+model.add(keras.layers.Conv2D(32(filter개수), kernel_size=3(커널개수->자동으로 3X3),activation='relu',padding='same',input_shape=(28,28,1)),strides=1 or 2) # 3=(3,3)
+model.add(keras.layers.MaxPooling2D(2((n,n)의 풀링필터)) or AveragePooling2D(2) #stride와 padding옵션은 2설정 순간 자동으로 설정돼서 안써도 됨
+model.add(keras.layers.Conv2D(64, kernel_size=(3,3), activation='relu', padding='same')) #두번쨰 CNN층
+model.add(keras.layers.MaxPooling2D(2))
+model.add(keras.layers.Flatten())  #일렬로
+model.add(keras.layers.Dense(100, activation='relu'))   
+model.add(keras.layers.Dropout(0.4))    
+model.add(keras.layers.Dense(10, activation='softmax'))          
+
+model.summary() 로 특성맵 크기와 가중치 개수 계산해보기
+keras.utils.plot_model(model, show_shapes=True) #이미지로
+
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+checkpoint_cb = keras.callbacks.ModelCheckpoint('best-cnn-model.keras',save_best_only=True)
+early_stopping_cb = keras.callbacks.EarlyStopping(patience=2,restore_best_weights=True)
+
+history = model.fit(x_train,y_train, epochs=20, validation_data=(x_val, y_val),callbacks=[checkpoint_cb, early_stopping_cb])     
+plt.plot(history.history['loss']) -> plt.plot(history.history['val_loss']) 로 손실그래프 
+
+model.evaluate(x_val, y_val) # restore_best_weights=True이므로 최적의 파라미터가 자동으로 모델에 설정됨->바로 evaluate, predict하면 됨
+preds=model.predict(x_val[0:1]) # [0]이면 (28,28,1) vs [0:1]이면 (1,28,28,1)
+classes[np.argmax(preds)]로 클래스 정보 
+model.evaluate(x_test,y_test) 마지막으로 test세트 검증
+
+          
