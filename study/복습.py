@@ -8,3 +8,6 @@
   early_stopping_cb=keras.callbacks.EarlyStopping(patience=2,restore_best_weights=True)
 - 손실값 이미지 비교, 어느 epoch에서 멈췄는지 보기 
 - 최고 모델 불러와 검증세트 평가-> x_test[:5]예측하고 정답과 비교 -> 테스트 세트 평가
+
+- data=pd.read_csv('../machine_learning/perch_3v.csv')얘로 회귀해보기
+- fish=pd.read_csv('../machine_learning/fish.csv') 예로 분류해보기
