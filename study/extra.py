@@ -114,6 +114,9 @@ model.evaluate에서 mae는 값이 작을수록 좋음
 
 1-3 분류 다른 예시 
 fish=pd.read_csv('../machine_learning/fish.csv')
+x: minmaxscaling, y: labelencoding
+샘플수가 적을경우 dropout해제, early stopping해제, 층여러개, epoch많이 
+
 
 
 2. CNN(합성곱층) 
