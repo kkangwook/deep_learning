@@ -100,6 +100,21 @@ bestmodel.predict(x_test[0:5]) -> np.argmax(prediction, axis=1), y_test[0:5]로 
 
 
 
+1-2회귀 버전
+data=pd.read_csv('../machine_learning/perch_3v.csv') #변수 3개
+-> poly+minmaxscale화(relu나 sigmoid가 0~1값을 가지므로) / y도 스케일링 필요
+model=keras.Sequential()
+model.add(keras.layers.Dense(100,activation='relu',input_shape=(10,))) #poly시 변수10개됨, relu
+model.add(keras.layers.Dropout(0.3))
+model.add(keras.layers.Dense(10,activation='relu')) #relu
+model.add(keras.layers.Dense(1,activation='linear')) # 출력층은 linear 
+model.compile(optimizer='adam',loss='mse',metrics=['mae'])
+데이터 예측시 그 예측값을 mm.inverse_transform함
+model.evaluate에서 mae는 값이 작을수록 좋음
+
+1-3 분류 다른 예시 
+fish=pd.read_csv('../machine_learning/fish.csv')
+
 
 2. CNN(합성곱층) 
 입력->패딩->필터의 커널이 입력에 가해짐->특성맵생성->풀링으로 축소->1차원화->밀집층 
