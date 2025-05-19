@@ -194,4 +194,18 @@ for i in range(2):
 
 plt.show() 
 
---특성맵 시각화------------
+--각 필터별 특성맵 시각화: 필터32개면 특성맵 32개------------
+#API기능 
+model.input으로 입력값 가져올수있음
+model.layers[n].output으로 n번째 층의 output결과(z값 배열이나 특성맵) 가져올 수 있음
+  -> keras.Model(model.inputs,  model.layers[n].output) # 입력~n번째 층까지만 가지는 모델 생성 
+# 하나의 샘플에 대한 n번째 층의 필터 특성맵 시각화하기
+fm_nth=keras.Model(model.inputs, model.layers[n].output) #이때 0이면 첫번째 합성곱층, 2해야 풀링층 다음의 두번 함성곱층
+smaple = x_train[k:k+1].reshape(-1, 28, 28, 1)/255.0 #k번째 샢믈 가져오기
+fm_n_k=fm_nth.predict(sample) # predict하면 특성맵값이 출력 (1,28,28,32) 하나의 샘플, (28,28)의 특성맵 32개 
+fig, axs = plt.subplots(4, 8, figsize=(15,8))   #n번째 층의 필터개수를 subplot의 가로세로개수로 (64면 8*8) 
+for i in range(4):
+    for j in range(8):
+        axs[i, j].imshow(fm_n_k[0,:,:,i*8 + j]) #하나 샘플의 (28,28)을 전부 가져오겠다
+        axs[i, j].axis('off')
+plt.show()
