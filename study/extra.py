@@ -183,13 +183,13 @@ model.evaluate(x_test,y_test) 마지막으로 test세트 검증
 
 
 --가중치 시각화 -----------
-weights= model.layers[k].weight[0].numpy() #k번째 층의 절편제외한 가중치만을 넘파이배열로 (3,3,1,32): 커널사이즈 (3,3),1,필터개수(32)
+weights= model.layers[k].weights[0].numpy() #k번째 층의 절편제외한 가중치만을 넘파이배열로 (3,3,1,32): 커널사이즈 (3,3),1,필터개수(32)
   #-histogram: plt.hist(weights.reshape(-1, 1)) 
   #-시각화:
 fig, axs = plt.subplots(2, 16, figsize=(15,2))
 for i in range(2):
     for j in range(16):    # 16개 이미지 2줄로
-        axs[i, j].imshow(conv_weights[:,:,0,i*16 + j], vmin=-0.5, vmax=0.5)   #(3,3,1,1)에서 (3,3,1,32)까지
+        axs[i, j].imshow(weights[:,:,0,i*16 + j], vmin=-0.5, vmax=0.5)   #(3,3,1,1)에서 (3,3,1,32)까지
         axs[i, j].axis('off')                              #vmin과 vmax로 컬러맵으로 표현할 최소최대값 지정
 
 plt.show() 
