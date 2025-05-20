@@ -18,7 +18,8 @@
 -> 데이터 전처리 ->train세트에서 20% validation 세트 분리
 -> 1D, 2D, 3D에 들어가기 위한 데이터 크기와 input_shape은?
 -> CNN층의 파라미터 6개는? 가능한 풀링층 2개는?
--> CNN 필터32개->풀링2-> cnn필터 64 -> 풀링2로 모델 생성, 학습 밑에꺼 넣어서
+-> CNN 필터32개->풀링2-> cnn필터 64 -> 풀링2로 모델 생성 -> 요약+시각화
+-> 학습 밑에꺼 넣어서
   checkpoint_cb = keras.callbacks.ModelCheckpoint('best-cnn-model.keras',save_best_only=True)
   early_stopping_cb = keras.callbacks.EarlyStopping(patience=2,restore_best_weights=True)
 -> 손실그래프 그리기 ->베스트모델 가져오기-> 검증세트 평가 -> x_val[0]예측, y_val과 비교 -> 테스트 세트 검증
