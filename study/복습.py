@@ -21,7 +21,7 @@
 -> CNN 필터32개->풀링2-> cnn필터 64 -> 풀링2로 모델 생성, 학습 밑에꺼 넣어서
   checkpoint_cb = keras.callbacks.ModelCheckpoint('best-cnn-model.keras',save_best_only=True)
   early_stopping_cb = keras.callbacks.EarlyStopping(patience=2,restore_best_weights=True)
--> 손실그래프 그리기 -> 검증세트 평가 -> x_val[0]예측, y_val과 비교 -> 테스트 세트 검증
+-> 손실그래프 그리기 ->베스트모델 가져오기-> 검증세트 평가 -> x_val[0]예측, y_val과 비교 -> 테스트 세트 검증
 -> 가중치 시각화 하기 
 fig, axs = plt.subplots(2, 16, figsize=(15,2))
 for i in range(2):
