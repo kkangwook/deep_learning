@@ -39,3 +39,22 @@ for i in range(4):
         axs[i, j].axis('off')
 plt.show()
 
+
+3. RNN
+text가 RNN에 들어가기 위해서 거쳐야할과정은? -> (4,3,5)가 되었다면 각각의 의미는? 
+-> 은닉차원이 6일때 입력가중치, 순환가중치, 절편개수는? -> 타임스텝크기라는 단어와 일치하는 단어 두가지는?
+-> return_sequence=True/False각각일때 하나의 샘플당 은닉값은? -> 샘플까지 포함하면?
+
+from tensorflow.keras.datasets import imdb
+(x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=300) 
+-> 이 데이터 구조확인하고 x_train[0]의 토큰수 확인하기 -> train세트에서 validation세트 20퍼떼기
+-> 자를만한 위치 찾기 -> 우리는 100개까지, 잘렸을때 어떤식으로 되고 그 이유는?
+-> RNN층  파라미터 5가지는? -> RNN층 2개 (3종류중 2개 섞어서)로 해서 모델생성(드롭아웃적용)
+-> 요약보고 입력값크기는? 가중치개수는? RNN층 지난 은닉값 크기 두가지는?
+----
+rmsprop = keras.optimizers.RMSprop(learning_rate=1e-4)
+checkpoint_cb = keras.callbacks.ModelCheckpoint('best-embedding-model.keras',save_best_only=True)
+early_stopping_cb = keras.callbacks.EarlyStopping(patience=3, restore_best_weights=True)
+----
+-> 배치 한번에 10개넣는 방식으로 학습 -> 손실함수그래프보기 -> 제일 좋은 모델 불러오기
+-> x_test와 y_test검증 -> x_test[:10] 예측도 해보기
