@@ -120,6 +120,8 @@ x: minmaxscaling, y: labelencoding
 
 
 
+
+
 2. CNN(합성곱층) 
 입력->패딩->필터의 커널이 입력에 가해짐->특성맵생성->풀링으로 축소->1차원화->밀집층 
 샘플하나당 입력차원배열이 n차원 배열이면 필터도 n차원 배열, 필터하나 찍을때마다 스칼라값 하나 
@@ -210,3 +212,19 @@ for i in range(4):
         axs[i, j].imshow(fm_n_k[0,:,:,i*8 + j]) #하나 샘플의 (28,28)을 전부 가져오겠다
         axs[i, j].axis('off')
 plt.show()
+
+
+
+
+3. RNN(순환층)
+- 회귀와 같은 상황에서 y값이 스칼라값이라면 return_sequence=False만 가능(값이 하나만 나오게)
+  -> or RNN층 이후 dense(1)로 하면 return_sequence=True도 가능
+
+!!!!!!! 각 샘플의 토큰개수(time_step) 전부 같아야하고 by padding !!!!!!!!!!!!!!
+!!!!!!! 모든 단어하나(시퀀스하나)의 입력차원 크기도 같아야함 by embedding층!!!!!
+
+해석: text=['he is a boy','she is a girl','i am me','they are them'] # 샘플4개
+텍스트 정제 -> 토큰화 -> 불용어제거 -> 어간추출 -> keras의 tokenzier로 숫자인코딩(샘플마다 토큰개수 다르므로 길이도 다름)
+-> 같은 길이가 되게끔 keras의 padding -> 임베딩층에 넣어 각 시퀀스 별 입력차원 크기 같게끔
+-> RNN층(LSTM,GRU)에 넣기 -> dense층으로
+
