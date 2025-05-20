@@ -101,7 +101,7 @@ bestmodel.predict(x_test[0:5]) -> np.argmax(prediction, axis=1), y_test[0:5]로 
 
 
 1-2회귀 버전
-!!!!!!!!!!!!!!! y도 스케일링 필요 !!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!! y도 스케일링 필요 -> predict후에는 inverse_transform필요 !!!!!!!!!!!!!!!!!!!!!!!
 data=pd.read_csv('../machine_learning/perch_3v.csv') #변수 3개
 -> poly+minmaxscale화(relu나 sigmoid가 0~1값을 가지므로) / y도 스케일링 필요
 model=keras.Sequential()
