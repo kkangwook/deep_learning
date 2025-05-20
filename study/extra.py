@@ -218,13 +218,59 @@ plt.show()
 
 3. RNN(순환층)
 - 회귀와 같은 상황에서 y값이 스칼라값이라면 return_sequence=False만 가능(값이 하나만 나오게)
-  -> or RNN층 이후 dense(1)로 하면 return_sequence=True도 가능
+  -> or RNN층 이후 dense(1)로하거나 다층RNN이면 return_sequence=True도 가능
 
 !!!!!!! 각 샘플의 토큰개수(time_step) 전부 같아야하고 by padding !!!!!!!!!!!!!!
 !!!!!!! 모든 단어하나(시퀀스하나)의 입력차원 크기도 같아야함 by embedding층!!!!!
-
+  -> RNN층에 들어가는 입력크기 =  (batch_size, time_steps, input_dim)= (샘플수,시퀀스길이,시퀀스 하나의 입력크기)
+                                            
 해석: text=['he is a boy','she is a girl','i am me','they are them'] # 샘플4개
+# RNN모델 구저
 텍스트 정제 -> 토큰화 -> 불용어제거 -> 어간추출 -> keras의 tokenzier로 숫자인코딩(샘플마다 토큰개수 다르므로 길이도 다름)
 -> 같은 길이가 되게끔 keras의 padding -> 임베딩층에 넣어 각 시퀀스 별 입력차원 크기 같게끔
--> RNN층(LSTM,GRU)에 넣기 -> dense층으로
+-> RNN층(LSTM,GRU)에 넣기 -> return_sequence=False시 input_shape은 1차원으므로 flatten없이 바로 dense층으로
+or return_sequence=True시 flatten층 필요
+# RNN층에서
+text가 임베딩 까지 거치니 (4,3,5)이 됐다고 가정하자 # 샘플수 4개, 시퀀스 길이 3(by padding), 각 단어는 5차원 벡터로 임베딩
+은닉차원(뉴런개수)이 6차원일때 입력가중치는 (5,6) #각 단어별 입력벡터3, 뉴런개수5
+순환 가중치는 (6,6)이며 다른 뉴런에도 영향, 절편은 6개 #뉴런개수가 5이므로
+타임스텝 한번은 하나의 텍스트의 하나의 단어가 들어간것: 타임스텝크기=시퀀스길이=단어개수
+    return_sequence=True시 (3,6)  # (시퀀스길이,뉴런개수)
+    return_sequence=False시 (6,) #뉴런개수
+최종: (4,3,6) or (4,6), parameter개수는 5*6+6*6+6=72 
 
+
+@@@@코드@@@@
+from tensorflow.keras.datasets import imdb
+(x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=300)  #자주 등장하는 단어 300개까지만, 없는 단어는=2, 문장의 시작=1, 패딩은 0으로, y값의 0=부정, 1=긍정
+-> x_train.shape=(25000,)으로 샘플 25000개 -> len(x_train[0])하면 토큰수
+-> train에서 validation세트 20% 떼어놓기 -> 패딩위한 각 샘플들의 단어길이 보기
+  lengths = np.array([len(x) for x in x_train])
+  print(np.mean(lengths), np.median(lengths))
+  plt.hist(lengths)
+-> 자를만한 위치 찾기-> 우리는 100개 단어까지만
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+x_train = pad_sequences(x_train, maxlen=100) #모든 샘플 뒤에서부터 100개까지만 남고 잘림-> 뒷부분의 정보가 더 유용하리라 기대
+x_val = pad_sequences(x_val, maxlen=100) #validation세트도 패딩
+x_train.shape=(20000,100) #토큰 100개짜리의 20000개 샘플
+
+model=keras.Sequential()
+model.add(keras.layers.Embedding(300,16,input_shape=(100,)) # 총 300종류의 단어, 16은 벡터차원으로 우리가 지정/ one-hot encoding하기도 함
+model.add(keras.layers.SimpleRNN or LSTM or GRU(8, return_sequence=True or False, #은닉층 차원 개수
+                                 activation='tanh',dropout=0.3,go_backwards=False)) #True면 역순
+model3.add(keras.layers.SimpleRNN or LSTM or GRU(8, dropout=0.3))  # return_sequence=False가 디폴트 -> Flatten필요X
+model.add(keras.layers.Dense(1, activation='sigmoid'))
+model.summary()  
+# 입력값크기는? (20000,100,16) 가중치개수는? 16*8+8*8+8 (simpleRNN기준)
+# RNN층 지나면 몇차원 출력될지: (8,) or (100,8) -> (20000,8) or (20000,100,8) 
+rmsprop = keras.optimizers.RMSprop(learning_rate=1e-4) #디폴트 0.001대신 0.0001로
+model.compile(optimizer=rmsprop or 'adam', loss='binary_crossentropy',metrics=['accuracy']) #손실함수-이진분류
+-----
+checkpoint_cb = keras.callbacks.ModelCheckpoint('best-embedding-model.keras',save_best_only=True)
+early_stopping_cb = keras.callbacks.EarlyStopping(patience=3, restore_best_weights=True)
+-----
+history = model.fit(x_train, y_train, epochs=100, batch_size=64,   #batch_size도 설정가능!!!
+                     validation_data=(x_val, y_val),            #그냥 패딩된 값까지만 넣으면 됨!!!!!
+                     callbacks=[checkpoint_cb, early_stopping_cb])
+plt.plot(history.history['loss']) -> plt.plot(history.history['val_loss'])으로 검증 
+3종류의 모델중 제일 좋은 모델 불러와 x_test padding하고 y_test와 함께 검증 -> 예측도해보기
