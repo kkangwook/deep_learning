@@ -110,7 +110,9 @@ model.add(keras.layers.Dropout(0.3))
 model.add(keras.layers.Dense(10,activation='relu')) #relu
 model.add(keras.layers.Dense(1,activation='linear')) # 출력층은 linear 
 model.compile(optimizer='adam',loss='mse',metrics=['mae'])
-데이터 예측시 그 예측값을 mm.inverse_transform함
+
+!!! 데이터 예측시 y_pred=model.predict(x_test)후 mm*y*.inverse_transform(y_pred)로 y minmaxscale한걸로 되돌리기!!!!!!!!!!!
+
 model.evaluate에서 mae는 값이 작을수록 좋음
 
 1-3 분류 다른 예시 
