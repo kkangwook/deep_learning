@@ -1,3 +1,12 @@
+transformer, GNN관련 논문
+Deep Learning in Bioinformatics — Briefings in Bioinformatics (2021)
+Transformers in Computational Biology — Nature Methods (2022)
+Graph Neural Networks in Biology and Medicine — Nature Reviews Genetics (2022)
+
+원서책
+Deep Learning in Bioinformatics (Springer, 2022)
+
+
 #유전자, 아미노산 서열을 통한 클래스 분류:
 -CNN/RNN:	One-hot or 임베딩 행렬
   유전자는 (샘플 수, 시퀀스 길이, 4)의 크기로 들어감
