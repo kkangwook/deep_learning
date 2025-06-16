@@ -6,6 +6,10 @@ Graph Neural Networks in Biology and Medicine — Nature Reviews Genetics (2022)
 원서책
 Deep Learning in Bioinformatics (Springer, 2022)
 
+유전체분석용
+Deep learning for genomics — Nature Reviews Genetics (2021)
+Selene: PyTorch-based deep learning library for biological sequences
+Basenji, DeepSEA, Basset: 유전체 서열 분석용 CNN 기반 툴킷 논문과 코드
 
 #유전자, 아미노산 서열을 통한 클래스 분류:
 -CNN/RNN:	One-hot or 임베딩 행렬
