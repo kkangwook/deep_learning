@@ -60,3 +60,4 @@ early_stopping_cb = keras.callbacks.EarlyStopping(patience=3, restore_best_weigh
 -> x_test와 y_test검증 -> x_test[:10] 예측도 해보기
 
 spam-data로 이진분류해보기
+bert나 복잡한 순환신경망은 불용어, 스템화등의 작업없이 그대로 Tokenizer로
