@@ -56,5 +56,5 @@ rmsprop = keras.optimizers.RMSprop(learning_rate=1e-4)
 checkpoint_cb = keras.callbacks.ModelCheckpoint('best-embedding-model.keras',save_best_only=True)
 early_stopping_cb = keras.callbacks.EarlyStopping(patience=3, restore_best_weights=True)
 ----
--> 배치는 오히려 32개나 64개 넣어야 빠름-> 학습 -> 손실함수그래프보기 -> 제일 좋은 모델 불러오기
+-> 배치는 오히려 32개나 64개 넣어야 빠름(GPU의 병렬)+ simpleRNN보다 LSTM등이 시간단축 훨씬더 압도적으로-> 학습 -> 손실함수그래프보기 -> 제일 좋은 모델 불러오기
 -> x_test와 y_test검증 -> x_test[:10] 예측도 해보기
