@@ -61,3 +61,4 @@ early_stopping_cb = keras.callbacks.EarlyStopping(patience=3, restore_best_weigh
 
 spam-data로 이진분류해보기
 bert나 복잡한 순환신경망은 불용어, 스템화등의 작업없이 그대로 Tokenizer로
+임베딩할때는 input dim 더 넉넉하게 잡아도 됌
