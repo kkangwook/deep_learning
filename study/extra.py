@@ -241,6 +241,7 @@ text가 임베딩 까지 거치니 (4,3,5)이 됐다고 가정하자 # 샘플수
     return_sequence=False시 (6,) #뉴런개수
 최종: (4,3,6) or (4,6), parameter개수는 5*6+6*6+6=72 
 
+임베딩할때는 input dim 더 넉넉하게 잡아도 됌
 
 @@@@코드@@@@
 from tensorflow.keras.datasets import imdb
@@ -266,7 +267,7 @@ model.summary()
 # 입력값크기는? (20000,100,16) 가중치개수는? 16*8+8*8+8 (simpleRNN기준)
 # RNN층 지나면 몇차원 출력될지: (8,) or (100,8) -> (20000,8) or (20000,100,8) 
 rmsprop = keras.optimizers.RMSprop(learning_rate=1e-4) #디폴트 0.001대신 0.0001로
-model.compile(optimizer=rmsprop or 'adam', loss='binary_crossentropy',metrics=['accuracy']) #손실함수-이진분류
+model.compile(optimizer=rmsprop or 'adam', loss='binary_crossentropy',metrics=['accuracy or auc']) #손실함수-이진분류
 -----
 checkpoint_cb = keras.callbacks.ModelCheckpoint('best-embedding-model.keras',save_best_only=True)
 early_stopping_cb = keras.callbacks.EarlyStopping(patience=3, restore_best_weights=True)
