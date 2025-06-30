@@ -90,9 +90,14 @@ tf.math.log() # 로그 함수
 # numpy 유사 함수
 tf.reduce_sum(data,axis=1]) # np.sum
 x.get_shape() # x.shape
-tf.reshape(data, (2, 3)) # np.reshape
 tf.matmul(x, y) # @ 행렬곱
 x[0,0], x[:,0], x[0,:] # 인덱싱 가능
+
+#모양변경하기
+tf.reshape(data, (2, 3)) # np.reshape
+tf.transpose(x) # (2,3)->(3,2)
+tf.squeeze(x) # 차원size 1인경우 제거 ex) (1,2,1,3)->(2,3) 
+tf.expand_dims(x, axis=n) # 한 차원 늘려줌
 
 
 ### 텐서플로우 데이터 생성하기
