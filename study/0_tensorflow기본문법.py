@@ -47,7 +47,50 @@ with writer.as_default(): # 블록 안에서 실행되는 연산 그래프를 �
     result = ***함수***(x, y) # 여기에 함수    
     tf.summary.trace_export(name="ArithmeticGraph", step=0) 
 print(result) #하면 값나옴
-# anaconda prompt에서 한줄씩
+# anaconda prompt에서 한줄씩 입력해 tensorboard 오픈
 conda activate tensorflow
 tensorboard --logdir=C:\ITWILL\logs\calc\***아까 정해준 이름***
 -> 뜬 사이트 ctrl+클릭으로 사이트 오픈 -> 시각화된 정보 볼수있음(노도와 엣지로 이루어진)
+    -> input, parameter, pred, loss, optimizer등 존재
+
+
+
+#### Tensor : 상수 또는 다차원 배열
+scala = tf.constant(1234) # 0차원(상수)  
+vector = tf.constant([1,2,3,4,5]) # 1차원 
+matrix = tf.constant([ [1,2,3], [4,5,6] ]) # 2차원
+cube = tf.constant([[ [1,2,3], [4,5,6], [7,8,9] ]]) # 3차원 or 3-tensor
+n차원은 rank=n, shape=[d0,d1,d2,...,dn-1], N-tensor라 부름
+
+# tensor속성
+tf.rank(x) # 차원수: 위의 값 각각 0,1,2,3
+tf.shape(x) # 모양: (), (5,), (2,3), (1,3,3)
+tf.size(x) # 원소개수: 1,5,6,9
+
+x.dtype
+x.get_shape() or x.shape
+x.ndim
+x.numpy()
+
+
+# 수학관련 함수
+tf.math.add() # 덧셈 함수
+tf.math.subtract() # 뺄셈 함수
+tf.math.multiply() # 곱셈 함수
+tf.math.divide() # 나눗셈(몫 계산) 함수
+tf.math.mod() # 나눗셈(나머지 계산) 함수
+tf.math.abs() # 절댓값 변경 함수
+tf.math.square() # 제곱 계산 함수
+tf.math.sqrt() # 제곱근 계산 함수
+tf.math.round() # 반올림 함수
+tf.math.pow() # 거듭제곱 함수
+tf.math.exp() # 지수 함수
+tf.math.log() # 로그 함수
+
+
+### 텐서플로우 데이터 생성하기
+tf.constant([1, 2, 3], dtype=tf.int32) #np.array와 유사-> 값 못바꿈
+tf.Variable([1.0, 2.0, 3.0], dtype=tf.float32) # tf.constant와 유사하지만 나중에 값 바뀔수있음
+tf.zeros([2, 3])  # 2x3 행렬(0으로 이루어진)
+tf.ones([2, 3]) # 2x3 행렬(1로 이루어진)
+tf.fill([2, 3], 7) # 7로 이루어진 2X3행렬
