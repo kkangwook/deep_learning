@@ -91,6 +91,7 @@ tf.math.log() # 로그 함수
 ### 텐서플로우 데이터 생성하기
 tf.constant([1, 2, 3], dtype=tf.int32) #np.array와 유사-> 값 못바꿈
 tf.Variable([1.0, 2.0, 3.0], dtype=tf.float32) # tf.constant와 유사하지만 나중에 값 바뀔수있음
+    .assign([4,5,6])으로 variable은 변경가능 
 tf.zeros([2, 3])  # 2x3 행렬(0으로 이루어진)
 tf.ones([2, 3]) # 2x3 행렬(1로 이루어진)
 tf.fill([2, 3], 7) # 7로 이루어진 2X3행렬
