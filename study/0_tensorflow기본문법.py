@@ -87,6 +87,13 @@ tf.math.pow() # 거듭제곱 함수
 tf.math.exp() # 지수 함수
 tf.math.log() # 로그 함수
 
+# numpy 유사 함수
+tf.reduce_sum(data,axis=1]) # np.sum
+x.get_shape() # x.shape
+tf.reshape(data, (2, 3)) # np.reshape
+tf.matmul(x, y) # @ 행렬곱
+x[0,0], x[:,0], x[0,:] # 인덱싱 가능
+
 
 ### 텐서플로우 데이터 생성하기
 tf.constant([1, 2, 3], dtype=tf.int32) #np.array와 유사-> 값 못바꿈
@@ -95,3 +102,19 @@ tf.Variable([1.0, 2.0, 3.0], dtype=tf.float32) # tf.constant와 유사하지만 
 tf.zeros([2, 3])  # 2x3 행렬(0으로 이루어진)
 tf.ones([2, 3]) # 2x3 행렬(1로 이루어진)
 tf.fill([2, 3], 7) # 7로 이루어진 2X3행렬
+tf.range(start, limit=None, delta=1) # 파이썬의 range/ delta는 증가값
+tf.linspace(start, stop, num) # num은 사이에 있을 개수 
+
+#랜덤 텐서 생성 ( shape=[x,y]와 같은 형태)
+tf.random.normal(shape, mean=0.0, stddev=1.0) #정규분포
+tf.random.uniform(shape, minval=0, maxval=None) # 균등분포
+tf.random.set_seed(seed) # 시드 설정
+
+
+## 활성화 함수
+#시그모이드
+1 / (1 + tf.math.exp(-x))
+
+# 소프트맥스
+ex = tf.math.exp(x - x.max())
+y = ex / sum(ex)
