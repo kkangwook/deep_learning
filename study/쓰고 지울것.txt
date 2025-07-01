@@ -38,3 +38,6 @@ result = concatenate([x, y])
                 Dense(2)
                      │
                 Dense(1) → 최종 출력
+
+# 출력 여러개도 가능
+저 result를 a층의 Dense(8)->dense(1)에 넣고 result를 b층의 dense(64)->dense(8)->dense(1)에 넣고 model(inputs,outputs=[a,b])하면 두개의 결과값이 출력
