@@ -1,0 +1,40 @@
+# 두 output concatenate할때 shape이 마지막 축 빼고 동일하면 가능
+(None, 8) + (None, 8) → OK
+(None, 8) + (None, 16) → OK
+(None, 8, 32) + (None, 8, 32) → OK
+(None, 8, 32) + (None, 10, 32) → ❌ (두 번째 차원이 다름)
+
+# Model(inputs=[x.input, y.input], outputs=z)
+x.input == inputA, y.input == inputB이므로 Model(inputs=[inputA, inputB], outputs=z)이렇게도 가능
+
+#모델 안말들고 그전에 concat가능
+inputA = Input(shape=(64,))
+inputB = Input(shape=(128,))
+
+x = Dense(16, activation="relu")(inputA)
+x = Dense(8, activation="relu")(x)
+
+y = Dense(64, activation="relu")(inputB)
+y = Dense(32, activation="relu")(y)
+y = Dense(8, activation="relu")(y)
+
+result = concatenate([x, y])
+
+
+
+# concat의 의미 : 유전자 + 환경 등 서로 다른 입력을 하나로 합침
+         InputA (64-dim)             InputB (128-dim)
+             │                           │
+         Dense(16)                  Dense(64)
+             │                           │
+         Dense(8)                   Dense(32)
+             │                           │
+                                        Dense(8)
+             └───────┬────────────┬─────┘
+                     │         concatenate
+                     ▼
+              Concatenated vector (8 + 8 = 16)  # 총 (16,)의 벡터가 되어 2개뉴런짜리 밀집층에 들어감 
+                     │
+                Dense(2)
+                     │
+                Dense(1) → 최종 출력
