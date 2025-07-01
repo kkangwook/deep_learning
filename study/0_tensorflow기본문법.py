@@ -140,6 +140,38 @@ tf.linalg.matmul(x, y) # 두 텐서 행렬의 행렬곱
 #시그모이드
 1 / (1 + tf.math.exp(-x))
 
+
 # 소프트맥스
 ex = tf.math.exp(x - x.max())
 y = ex / sum(ex)
+
+
+
+### 회귀방정식 모델 코드
+# 기초
+x = tf.constant(6.5) #독립변수
+y = tf.constant(5.2) # 종속변수
+w = tf.Variable(0.5) # 가중치
+b = tf.Variable(1.5) # 편향 
+
+y_pred = tf.math.multiply(X, w) + b # 회귀방정식으로 Y 예측
+    # -> b는 원점을 지나는 직선의 0절편을 수정해 자료에 잘 피팅되게함 
+err = tf.math.subtract(y, y_pred) # 오차 = 관측치-예측치
+loss = tf.reduce_mean(tf.square(err)) # 손실함수 : MSE
+
+#옵티마이저 -> 모델이 계산한 loss을 기준으로 가중치*를 업데이트해서 손실을 최소화하는 알고리즘
+optimizer = tf.optimizers.SGD(learning_rate=0.01) #SGD, Adam, RMSProp, Adagard 등의 종류 존재
+optimizer.minimize(loss, var_list=[w, b]) # w, b 업데이터 -> 오차 최소화
+
+
+# 전체모델
+y_pred = tf.matmul(x, w)  + b # 입력5개 시 x=(1,5) @ w=(5,1)
+loss = tf.reduce_mean(tf.square(Y – y_pred)) # 평균제곱오차(MSE)
+optimizer=tf.optimizers.Adam(0.1) # 최적화 알고리즘
+
+for step in range(100): # 반복학습
+ with tf.GradientTape() as tape : # 미분계수 자동 계산
+ # 1) 미분계수 : 손실과 조절변수 이용 기울기 계산
+ gradient = tape.gradient(target=loss, sources=[w, b]) # (손실, 조절변수)
+ # 2) 조절변수 수정(update)
+ optimizer.apply_gradients(zip(gradient, [w, b])) # (기울기, 조절변수)
