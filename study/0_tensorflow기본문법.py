@@ -95,6 +95,12 @@ tf.math.log() # 로그 함수
 
 # numpy 유사 함수
 tf.reduce_sum(data,axis=1]) # np.sum
+tf.reduce_mean()  # 평균
+tf.reduce_prod() # 원소들의 곱셈
+tf.reduce_min() # 최솟값 계산
+tf.reduce_max() # 최댓값 계산
+tf.reduce_all() # 원소가 전부 True -> True 반환
+tf.reduce_any() # 원소가 하나라도 True -> True 반환
 x.get_shape() # x.shape
 tf.matmul(x, y) # @ 행렬곱
 x[0,0], x[:,0], x[0,:] # 인덱싱 가능
@@ -120,6 +126,14 @@ tf.linspace(start, stop, num) # num은 사이에 있을 개수
 tf.random.normal(shape, mean=0.0, stddev=1.0) #정규분포
 tf.random.uniform(shape, minval=0, maxval=None) # 균등분포
 tf.random.set_seed(seed) # 시드 설정
+tf.random.shuffle(value) # 첫 번째 차원 기준으로 텐서의 원소 섞기
+
+# 선형대수 관련 함수
+tf.linalg.eye(n) # 단위행렬, 정수n
+tf.linalg.diag(x) # x행렬의 대각선만 추출해서 대각행렬로 
+tf.linalg.det(x) # 정방행렬의 행렬식(determinant)
+tf.linalg.inv(x) # 정방행렬의 역행렬
+tf.linalg.matmul(x, y) # 두 텐서 행렬의 행렬곱 
 
 
 ## 활성화 함수
