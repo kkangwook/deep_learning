@@ -1,3 +1,9 @@
+x변수: from sklearn.preprocessing import minmax_scale로 0~1로 정규화
+y변수: minmaxscailing or y_max값으로 전부 나누기 or 범주형시 from tensorflow.keras.utils import to_categorical로 원핫인코딩화
+
+
+
+
 딥러닝: 층 마다 선형방정식을 통과시켜 결과를 출력
   딥러닝의 선형방정식: 가중치와 절편을 랜덤하게 초기화 한 다음 에포크를 반복하면서 경사하강법으로 최적의 가중치와 절편을 찾음 
 
