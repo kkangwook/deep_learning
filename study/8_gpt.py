@@ -79,10 +79,36 @@ for _ in range(max_len):
 질문: 오늘 날씨 어때?
 답변: 맑습니다.
 
-->
-"질문: 오늘 날씨 어때?\n답변:"     #이런식으로 변환, 질문:, 답변: 값도 같이 넣어줌
-토큰화시 ['질문', ':', ' 오늘', ' 날씨', ' 어', '##때', '?', '\n', '답변', ':'] 로 변형
+-1. 데이터 셋 구조
+"질문: 오늘 날씨 어때?\n답변:맑습니다."     #이런식으로 변환, 질문:, 답변: 값도 같이 넣어줌
+토큰화시 x = ['질문', ':', ' 오늘', ' 날씨', ' 어', '##때', '?', '\n', '답변', ':', ' 맑습니다', '.'] 로 변형
 
-x=['질문', ':', ' 오늘', ' 날씨', ' 어', '##때', '?', '\n', '답변', ':'] 
-y=[':', ' 오늘', ' 날씨', ' 어', '##때', '?', '\n', '답변', ':',eos]
+x = ['질문', ':', ' 오늘', ' 날씨', ' 어', '##때', '?', '\n', '답변', ':', ' 맑습니다', '.']
+y = [':', ' 오늘', ' 날씨', ' 어', '##때', '?', '\n', '답변', ':', ' 맑습니다', '.', <EOS>]
  => 이때 반드시 항상 토크나이즈 후 시퀀스를 기준으로 한 칸 오른쪽 shift + EOS!!!!!!!!!!!!!!!!! 
+
+
+
+-2. 학습시킬때는 for문X
+model.fit(x, y) # 위의 x,y를 사용
+
+
+
+-3. 생성할때는 for문 쓰거나 아니면 for문없이 model.generate()사용
+
+prompt = "질문: 오늘 날씨 어때?\n답변:" # 첫 시작 prompt는 "~답변:" 까지 주면 뒤의 정답을 알아서 생성해줌
+
+# 1) 직접 for문으로 토큰 하나씩 생성
+generated = tokenizer(prompt, return_tensors="tf")["input_ids"]
+for _ in range(max_len):
+    outputs = model(generated)
+    next_token_logits = outputs.logits[:, -1, :]
+    next_token = tf.argmax(next_token_logits, axis=-1)
+    generated = tf.concat([generated, next_token], axis=-1)
+    if next_token == tokenizer.eos_token_id:
+        break
+
+# 2) HuggingFace generate() 활용 (추천) -> for문 쓸 필요 X
+input_ids = tokenizer(prompt, return_tensors="tf").input_ids
+generated_ids = model.generate(input_ids, max_length=50)
+generated_text = tokenizer.decode(generated_ids[0])
