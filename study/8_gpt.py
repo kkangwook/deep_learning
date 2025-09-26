@@ -8,7 +8,7 @@ output=model(x)
 나오는 값은 모든 입력 토큰에 대한 출력값(output.last_hidden_state)
 ->이때 각 토큰은 768(1028등도 가능)차원의 값을 가짐
 
-############################분류할시
+############################ 분류할시 #########################
 output.last_hidden_state에서 
   1. mean이던 max로든 pooling함 (tf.reduce_mean(outputs.last_hidden_state, axis=1))
   2. 마지막 토큰만 사용(마지막 토큰에서 그전까지 생성된 모든 토큰에 대한 요약본 담고있음: outputs.last_hidden_state[:, -1, :])-> bert의 cls처럼 사용
@@ -26,7 +26,7 @@ last_hidden_state.shape = (batch=1, seq_length=3, hidden_size=768)
 출력 = [0.1, 0.9]  (부정=0.1, 긍정=0.9)
 
 
-##############################생성형의 경우
+############################## 생성형의 경우 ############################
 outputs.last_hidden_state[:, -1, :]로 마지막 토큰 출력값 가져옴(전의 모든 맥락정보를 가지고 있음)
 이 값을 전체 vocab_size수 만큼의 뉴런을 가진 dense층에 넣어 소프트맥스로 이어질 단어 중 제일 확률높은 단어 가져옴 by argmax
 -> 이 과정을 다시 반복해 뒤에 이어질 단어 또 가져옴  
@@ -69,8 +69,24 @@ for _ in range(max_len):
     if next_token == tokenizer.eos_token_id:
         break
 
+
+################################## 입력/출력 길이가 다를수있는 이유 ######################
+학습시킬떄는 입력값과 label값의 입력크기는 같아야하지만(입력에서 한칸shift하고 eos더한게 label이여서 결국 둘의 길이 같음)
+결국 for문이나 generate을 쓰기때문에 생성할떄는 입력과 출력값의 길이가 다를수있음(eos가 오면 break되므로)
+또한 gpt학습시킬때 각 배치(Batch) 안 샘플 길이는 같아야 함(패딩 시켜서 길이 맞춤)
+###########################################################################################
+
+################################ 층 구조 ####################################
+위의 생성형 포함 이 밑에 있을 q&a나 번역 모델들 전부 
+input값을 기본 gptmodel넣음 
+-> 나온 last_hidden_state값을 dense(voca_size)에 넣음
+-> 나온값(logits)을 input의 shift+eos한 값을 정답으로 해서 학습시키면 됨
+###############################################################################
+
+
+
         
-######################### Q/A #####################
+#########################  Q/A  ###################
 이것도 생성형이랑 유사-> 대신 [질문+정답]을 한번에 input으로 입력
 -> x=질문, y=정답 대신 x=[질문+정답], y=[문+정답+eos]가 더 정확
 -> 또한 “질문:” / “답변:” 토큰넣어서 모델이 질문과 답변의 경계를 인지하도록 함
@@ -112,3 +128,39 @@ for _ in range(max_len):
 input_ids = tokenizer(prompt, return_tensors="tf").input_ids
 generated_ids = model.generate(input_ids, max_length=50)
 generated_text = tokenizer.decode(generated_ids[0])
+
+
+
+
+######################### 번역 #########################
+-> 생성형, qa와 유사하다보면 됌
+-> 대신 "질문:, 답변:" 말고 "translate English to Korean:"와 "->"를 넣어줌
+
+<예시>
+source (영어): "I love pizza."
+target (한국어): "나는 피자를 좋아해."
+
+-1. 데이터 셋 구조
+->시퀀스연결: "translate English to Korean: I love pizza. → 나는 피자를 좋아해."
+(이때 '->'나 '\n'넣어줘도 되고 안넣어줘도 됨  => 짜피 모델이 알아서 경계를 구분함)
+
+x = tokenizer("translate English to Korean: I love pizza. 나는 피자를 좋아해.")  # input_ids
+y = x shifted right + EOS
+
+
+
+-2. 학습
+model.fit(x,y)
+
+
+-3. 생성(for문 쓰거나 generate)
+prompt = "translate English to Korean: I love pizza."
+input_ids = tokenizer(prompt, return_tensors="tf").input_ids
+
+generated_ids = model.generate(input_ids, max_length=50)
+translated_text = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
+print(translated_text)  # "나는 피자를 좋아해."
+
+
+
+
