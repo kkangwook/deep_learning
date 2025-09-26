@@ -63,7 +63,7 @@ generated = tokenizer(prompt, return_tensors="tf")["input_ids"] #
 
 for _ in range(max_len):
     outputs = model(generated)
-    next_token_logits = outputs.logits[:, -1, :]
+    next_token_logits = outputs.logits[:, -1, :]    ###여기서 마지막 토큰으로 그 다음 토큰 예측 !!!!!!!!!!!!!
     next_token = tf.argmax(next_token_logits, axis=-1)
     generated = tf.concat([generated, next_token], axis=-1) #예측 된 값을 concat으로 옆으로 붙여서 다시 모델에 집어넣음
     if next_token == tokenizer.eos_token_id:
@@ -79,8 +79,10 @@ for _ in range(max_len):
 ################################ 층 구조 ####################################
 위의 생성형 포함 이 밑에 있을 q&a나 번역 모델들 전부 
 input값을 기본 gptmodel넣음 
--> 나온 last_hidden_state값을 dense(voca_size)에 넣음
+-> 나온 last_hidden_state값을 dense(voca_size)에 넣음 (학습시킬때는 전부)
 -> 나온값(logits)을 input의 shift+eos한 값을 정답으로 해서 학습시키면 됨
+
+그리고 생성할때는 for문+ outputs.logits[:, -1, :]을 사용  or generate하면 자동으로 생성
 ###############################################################################
 
 
