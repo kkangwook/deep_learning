@@ -1,3 +1,24 @@
+                   **gpt구조**
+
+         입력값=(batch_size,seq_len)
+                    ㅣ
+      -입력임베딩(토큰임베딩+ 위치임베딩)-
+    =>출력값(batch_size, seq_len, hidden_size=768)
+                    ㅣ
+      -transformer decoder block X N-
+             -Masked Multi-Head Self-Attention(삼각형의 casual masking적용된)-
+             -Residual Connection + LayerNorm(입력 + attention 출력 → 정규화)-
+             -Feed-Forward Network (MLP), gelu활성화 사용-
+             -Residual Connection + LayerNorm-
+     =>출력값(batch_size, seq_len, hidden_size=768)
+                    ㅣ
+      -LM Head (Dense layer with vocab_size)
+    =>출력값(batch_size, seq_len, vocab_size)    
+                    ㅣ
+                 -softmax-
+
+
+
 ########################제일 기본 모델 TFGPT2Model(TFbertModel과 유사)
 tokenzier=autotokenizer.from_pretrained('')
 x=tokenizer(text)['input_ids'] #input_ids만 들어가면 됨(attention_mask는 선택)!!!!!!!!!!!!!!!!!!!1
