@@ -75,7 +75,7 @@ labels    = [love, pizza, very, much, <EOS>]
 outputs = model(input_ids=input_ids, labels=labels)
 loss = outputs.loss  # 모델이 내부적으로 모든 위치에 대해 loss 계산
 => 모델은 자동으로 시퀀스 전체를 한 번에 처리 → 각 위치별 logits 계산 → loss 합산
-=> 따라서 for문은 필요X
+=> 따라서 모델 내부에 for문은 필요X (행렬로 한꺼번에 계산하기 때문) !!!!!!!!!!!!!!!!!!!!
 
 -3. 학습된 모델로 생성시킬때(for문 필요)
 
