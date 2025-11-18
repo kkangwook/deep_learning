@@ -10,6 +10,7 @@
 - 최고 모델 불러와 검증세트 평가-> x_test[:5]예측하고 정답과 비교 -> 테스트 세트 평가
 
 - data=pd.read_csv('../machine_learning/perch_3v.csv')얘로 회귀해보기
+    ->  invere_transform하고 나온 y값으로 r2-score계산한게 맞는거임
 - fish=pd.read_csv('../machine_learning/fish_7species.csv') 예로 분류해보기
 
 
