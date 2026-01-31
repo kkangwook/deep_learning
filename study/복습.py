@@ -26,9 +26,11 @@
 -> 데이터 전처리 ->train세트에서 20% validation 세트 분리
 -> 1D, 2D, 3D에 들어가기 위한 데이터 크기와 input_shape은?
 -> CNN층의 파라미터 6개는? 가능한 풀링층 2개는?
+
 ####
-함수형 api로 밑에하기!!!!
+함수형 api로 밑에하기!!!! 그리고 가중치, 특성맵그림보고 바로 rnn으로 가면됨
 ####
+
 -> CNN 필터32개->풀링2-> cnn필터 64 -> 풀링2로 모델 생성 -> 요약+시각화(keras.utils.plot_model(model, show_shapes=True))
 -> 파라미터 개수 계산 -> 학습 밑에꺼 넣어서
   checkpoint_cb = keras.callbacks.ModelCheckpoint('best-cnn-model.keras',save_best_only=True)
