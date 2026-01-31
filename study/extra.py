@@ -283,3 +283,41 @@ history = model.fit(x_train, y_train, epochs=100, batch_size=64,   #batch_size�
                      callbacks=[checkpoint_cb, early_stopping_cb])
 plt.plot(history.history['loss']) -> plt.plot(history.history['val_loss'])으로 검증 
 3종류의 모델중 제일 좋은 모델 불러와 x_test padding하고 y_test와 함께 검증 -> 예측도해보기
+
+
+
+
+############################################################
+spam-data분류 pytorch버전
+import torch
+import torch.nn as nn
+
+class MyModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.e = nn.Embedding(4500, 16)
+        self.r1 = nn.RNN(input_size=16, hidden_size=8, batch_first=True, dropout=0.1, nonlinearity='tanh')
+        self.r2 = nn.LSTM(input_size=8, hidden_size=8, batch_first=True, dropout=0.1)
+        self.d1 = nn.Linear(8, 4)
+        self.d2 = nn.Linear(4, 1)
+        self.relu = nn.ReLU()
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        x = self.e(x)
+        x, _ = self.r1(x)
+        x, (h, c) = self.r2(x)
+        # return_sequences=False → 마지막 hidden 사용
+        x = h[-1]
+        x = self.d1(x)
+        x = self.relu(x)
+        x = self.d2(x)
+        x = self.sigmoid(x)
+        return x
+
+model = MyModel()
+
+sample = torch.randint(0, 4500, (32, 100))   # batch=32, seq=100
+out = model(sample)
+print(out.shape)# torch.Size([32, 1])
+
