@@ -10,7 +10,8 @@
 - 최고 모델 불러와 검증세트 평가-> x_test[:5]예측하고 정답과 비교 -> 테스트 세트 평가
 
 #####
-class로 해서 하기(이때 class는 input_shape안들어가고 당연히 model.summary)해도 빈칸으로 나옴 but fit하고 summary하면 나옴!!!!!!!!!!!!!!!!!!!
+위에꺼 class로 해서 하기(이때 class는 input_shape안들어가고 당연히 model.summary)해도 빈칸으로 나옴 but fit하고 summary하면 나옴!!!!!!!!!!!!!!!!!!!
+그 후 CNN말고는 다 class로 하면됨
 #####
 
 - data=pd.read_csv('../machine_learning/perch_3v.csv')얘로 회귀해보기
