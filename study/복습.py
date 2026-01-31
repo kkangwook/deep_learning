@@ -58,6 +58,11 @@ text가 RNN에 들어가기 위해서 거쳐야할과정은? ->같은 크기여�
 -> 은닉차원이 6일때 입력가중치, 순환가중치, 절편개수는? -> 타임스텝크기라는 단어와 일치하는 단어 두가지는?
 -> return_sequence=True/False각각일때 하나의 샘플당 은닉값은? -> 샘플까지 포함하면?
 
+#####
+imdb말고 spam-data만 하면됨
+#####
+
+
 from tensorflow.keras.datasets import imdb
 (x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=300) 
 -> 이 데이터 구조확인하고 x_train[0]의 토큰수 확인하기 -> train세트에서 validation세트 20퍼떼기
