@@ -9,9 +9,15 @@
 - 손실값 이미지 비교, 어느 epoch에서 멈췄는지 보기 
 - 최고 모델 불러와 검증세트 평가-> x_test[:5]예측하고 정답과 비교 -> 테스트 세트 평가
 
+#####
+class로 해서 하기(이때 class는 input_shape안들어가고 당연히 model.summary)해도 빈칸으로 나옴 but fit하고 summary하면 나옴!!!!!!!!!!!!!!!!!!!
+#####
+
 - data=pd.read_csv('../machine_learning/perch_3v.csv')얘로 회귀해보기
     ->  invere_transform하고 나온 y값으로 r2-score계산한게 맞는거임
-- fish=pd.read_csv('../machine_learning/fish_7species.csv') 예로 분류해보기
+
+
+#안해도됨- fish=pd.read_csv('../machine_learning/fish_7species.csv') 예로 분류해보기
 
 
 2. CNN
@@ -19,6 +25,9 @@
 -> 데이터 전처리 ->train세트에서 20% validation 세트 분리
 -> 1D, 2D, 3D에 들어가기 위한 데이터 크기와 input_shape은?
 -> CNN층의 파라미터 6개는? 가능한 풀링층 2개는?
+####
+함수형 api로 밑에하기!!!!
+####
 -> CNN 필터32개->풀링2-> cnn필터 64 -> 풀링2로 모델 생성 -> 요약+시각화(keras.utils.plot_model(model, show_shapes=True))
 -> 파라미터 개수 계산 -> 학습 밑에꺼 넣어서
   checkpoint_cb = keras.callbacks.ModelCheckpoint('best-cnn-model.keras',save_best_only=True)
