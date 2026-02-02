@@ -126,8 +126,41 @@ fish=pd.read_csv('../machine_learning/fish.csv')
 x: minmaxscaling, y: labelencoding
 샘플수가 적을경우 dropout해제, early stopping해제, 층여러개, epoch많이 
 
+###############################
+분류 x1(2,3컬럼), x2(4,5,6컬럼)로 나눠서 내부에서 concat하기
+class mymodel(Model):
+    def __init__(self):
+        super().__init__()
+        self.a1=Dense(64,activation='relu')
+        self.a2=Dense(32,activation='relu')
+        self.a3=Dense(16,activation='relu')
+        self.b1=Dense(64,activation='relu')
+        self.b2=Dense(32,activation='relu')
+        self.c1=Dense(64,activation='relu')
+        self.c2=Dense(16,activation='relu')
+        self.c3=Dense(7)
+        self.d=Dropout(0.1)
 
+    def call(self,x):
+        x1,x2=x
+        x1=self.a1(x1)
+        x1=self.a2(x1)
+        x1=self.d(x1)
+        x1=self.a3(x1)
+        x2=self.b1(x2)
+        x2=self.d(x2)
+        x2=self.b2(x2)
+        x3 = tf.concat([x1, x2], axis=1)
+        x3=self.c1(x3)
+        x3=self.c2(x3)
+        x3=self.d(x3)
+        x3=self.c3(x3) #활성화함수없으므로 keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+        return x3
 
+model.fit([x1_train,x2_train],y_train,validation_data=([x1_val, x2_val], y_val),epochs=100,batch_size=32,
+         callbacks=[checkpoint_cb,early_stopping_cb])
+
+############################################################
 
 
 2. CNN(합성곱층) 
