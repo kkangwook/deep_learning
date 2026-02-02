@@ -14,12 +14,17 @@
 그 후 CNN말고는 다 class로 하면됨
 #####
 
-- data=pd.read_csv('../machine_learning/perch_3v.csv')얘로 회귀해보기
+- data=pd.read_csv('../machine_learning/perch_3v.csv')얘로 회귀해보기 
     ->  invere_transform하고 나온 y값으로 r2-score계산한게 맞는거임
+#####
+pytorch로도 하기!!!!!
+#####
 
 
-#안해도됨- fish=pd.read_csv('../machine_learning/fish_7species.csv') 예로 분류해보기
-
+###############
+이건 pytorch로만 해보기(분류)!!!!!!!!!!!!
+fish=pd.read_csv('../machine_learning/fish_7species.csv') 예로 분류해보기
+###############
 
 2. CNN
 -(x_train,y_train),(x_test,y_test)=keras.datasets.fashion_mnist.load_data()
