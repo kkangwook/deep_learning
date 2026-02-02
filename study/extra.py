@@ -141,8 +141,8 @@ class mymodel(Model):
         self.c3=Dense(7)
         self.d=Dropout(0.1)
 
-    def call(self,x):
-        x1,x2=x
+    def call(self,inputs):
+        x1,x2=inputs            # 여러입력넣을시 항상 튜플/리스트형태의 inputs로!!!!!!!!!!!!!! -> 그러면 fit할때로 (x1,x2) or [x1,x2]처럼!!!!!!!!!!
         x1=self.a1(x1)
         x1=self.a2(x1)
         x1=self.d(x1)
@@ -150,11 +150,11 @@ class mymodel(Model):
         x2=self.b1(x2)
         x2=self.d(x2)
         x2=self.b2(x2)
-        x3 = tf.concat([x1, x2], axis=1)
+        x3 = tf.concat([x1, x2], axis=1)    # 넘파이쓰면안됨!!!!!!!!!!!!!!1
         x3=self.c1(x3)
         x3=self.c2(x3)
         x3=self.d(x3)
-        x3=self.c3(x3) #활성화함수없으므로 keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+        x3=self.c3(x3) #활성화함수없으므로 keras.losses.SparseCategoricalCrossentropy(from_logits=True)!!!!!!!!!!!!!!!1
         return x3
 
 model.fit([x1_train,x2_train],y_train,validation_data=([x1_val, x2_val], y_val),epochs=100,batch_size=32,
