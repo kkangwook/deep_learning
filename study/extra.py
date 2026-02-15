@@ -325,6 +325,13 @@ spam-data분류 pytorch버전
 import torch
 import torch.nn as nn
 
+# 데이터 torch로 변환
+x_train=torch.tensor(x_train, dtype=torch.float32)
+x_test=torch.tensor(x_test, dtype=torch.float32)
+y_train=torch.tensor(y_train, dtype=torch.float32)
+y_test=torch.tensor(y_test, dtype=torch.float32)
+
+
 class MyModel(nn.Module):
     def __init__(self):
         super().__init__()
@@ -350,7 +357,25 @@ class MyModel(nn.Module):
 
 model = MyModel()
 
-sample = torch.randint(0, 4500, (32, 100))   # batch=32, seq=100
-out = model(sample)
-print(out.shape)# torch.Size([32, 1])
+o=optim.Adam(model.parameters(),lr=0.002) #옵티마이저
+crit=nn.MSELoss()   # 회귀
+epochs=100
 
+#학습
+model.train() #dropout있으므로
+for i in range(50):
+    pred = model(x_train)
+    cost = crit(pred, y_train)
+    o.zero_grad()
+    cost.backward()
+    o.step()
+    if i % 5 == 0:
+        print(cost.item())
+
+#평가(여러개 predict하기)
+model.eval() # dropout꺼주기 위해
+with torch.no_grad():
+    pred = model(x_test)
+pred = pred.numpy()
+pred = mmy.inverse_transform(pred) # 회귀면
+pred
