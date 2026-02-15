@@ -331,6 +331,10 @@ x_test=torch.tensor(x_test, dtype=torch.float32)
 y_train=torch.tensor(y_train, dtype=torch.float32)
 y_test=torch.tensor(y_test, dtype=torch.float32)
 
+#분류면 밑에꺼 다시실행 -> nn.CrossEntropyLoss()사용하면서 정답은 label-encoding형태(one-hot 아님!!!!)
+y_train = y_train.long()
+y_test  = y_test.long()
+
 
 class MyModel(nn.Module):
     def __init__(self):
@@ -359,6 +363,8 @@ model = MyModel()
 
 o=optim.Adam(model.parameters(),lr=0.002) #옵티마이저
 crit=nn.MSELoss()   # 회귀
+crit=nn.BCEWithLogitsLoss() # 이진분류-마지막층에 sigmoid넣지말기!!!!!!!!!!!!
+crit=nn.CrossEntropyLoss() # 다중분류-마지막층에 softmax 넣지말기!!!!!!!!!!!!!!!!
 epochs=100
 
 #학습
@@ -376,6 +382,17 @@ for i in range(50):
 model.eval() # dropout꺼주기 위해
 with torch.no_grad():
     pred = model(x_test)
+
+#이제 여기서 셋중하나
+# 회귀면
 pred = pred.numpy()
-pred = mmy.inverse_transform(pred) # 회귀면
-pred
+pred = mmy.inverse_transform(pred)
+
+#이진분류면
+pred = torch.sigmoid(pred)
+pred = pred.numpy()
+pred_class = (pred > 0.5).astype(int) 
+
+# 다중분류면
+pred = pred.numpy()
+pred=np.argmax(pred,axis=-1)
