@@ -396,3 +396,50 @@ pred_class = (pred > 0.5).astype(int)
 # 다중분류면
 pred = pred.numpy()
 pred=np.argmax(pred,axis=-1)
+
+
+
+##################################### input 여러개 ########################################
+from tensorflow.keras.layers import Concatenate #이게 고수준 연산
+
+class mymodel(Model):
+    def __init__(self):
+        super().__init__()
+        self.a1=Dense(64,'relu')
+        self.a2=Dense(32,'relu')
+        self.d=Dropout(0.2)
+        self.a3=Dense(16,'relu')
+        self.b1=Dense(64,'relu')
+        self.b2=Dense(32,'relu')
+        self.d1=Dense(64,'relu')
+        self.d2=Dense(16,'relu')
+        self.d3=Dense(7)
+        self.c=Concatenate() #고수준 concat층
+
+    def call(self,inputs):  #inputs로 한꺼번에
+        x1,x2=inputs        # inputs에서 하나씩 지정
+        x1=self.a1(x1)
+        x1=self.a2(x1)
+        x1=self.d(x1)
+        x1=self.a3(x1)
+
+        x2=self.b1(x2)
+        x2=self.b2(x2)
+
+        x=self.c([x1,x2])   # or tf.concat([x1,x2],axis=1) <- but 저수준연산이어서 그냥 concat layers를 씀 
+        x=self.d1(x)
+        x=self.d2(x)
+        x=self.d3(x)
+
+        return x
+
+#학습-> x_train을 리스트형태로
+model.fit([x1_train,x2_train],y_train,batch_size=32,epochs=100,validation_data=[[x1_val,x2_val],y_val],
+         callbacks=[checkpoint_cb,early_stopping_cb])
+
+#예측
+np.argmax(model.predict([x1_test,x2_test]),axis=-1)
+
+#평가
+model.evaluate([x1_test,x2_test],y_test)
+
