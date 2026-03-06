@@ -385,16 +385,16 @@ with torch.no_grad():
 
 #이제 여기서 셋중하나
 # 회귀면
-pred = pred.numpy()
+pred = pred.detach().numpy()
 pred = mmy.inverse_transform(pred)
 
 #이진분류면
 pred = torch.sigmoid(pred)
-pred = pred.numpy()
+pred = pred.detach().numpy()
 pred_class = (pred > 0.5).astype(int) 
 
 # 다중분류면
-pred = pred.numpy()
+pred = pred.detach().numpy()
 pred=np.argmax(pred,axis=-1)
 
 
