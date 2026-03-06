@@ -380,7 +380,7 @@ for i in range(50):
 
 #평가(여러개 predict하기)
 model.eval() # dropout꺼주기 위해
-with torch.no_grad():
+with torch.no_grad():          #그냥 predict하는것보다 이거하는게 정석이고 메로리절약+속도빠름
     pred = model(x_test)
 
 #이제 여기서 셋중하나
