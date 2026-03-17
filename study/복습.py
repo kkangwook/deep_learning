@@ -18,6 +18,7 @@
     ->  invere_transform하고 나온 y값으로 r2-score계산한게 맞는거임
 #####
 pytorch로도 하기!!!!!
+torch, torch.nn, torch.optim이면 모든게 해결!!!!!!
 #####
 
 
