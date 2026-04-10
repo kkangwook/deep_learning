@@ -1,4 +1,6 @@
 1. 기본 DNN
+checkpoint_cb = keras.callbacks.ModelCheckpoint('dnn_model.keras',save_best_only=True)
+early_stopping_cb = keras.callbacks.EarlyStopping(patience=2,restore_best_weights=True)
 
 1-1. 회귀
 - tensorflow의 sequential로 
