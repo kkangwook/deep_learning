@@ -1,37 +1,34 @@
 1. 기본 DNN
--(x_train,y_train),(x_test,y_test)=keras.datasets.fashion_mnist.load_data() 불러오기
-- 10개 이미지화 -> 데이터 전처리 ->train세트에서 20% validation 세트 분리
-- 입력층에 들어가는 두가지 방법은?
-- 층 2개, 규제층 하나로 -> 요약정보보기 -> 각 파라미터 개수 나온 원리는?+실제로 계산해보기
--밑에 애들 넣고 학습시키기
-  checkpoint_cb=keras.callbacks.ModelCheckpoint('best-model.h5', save_best_only=True)  
-  early_stopping_cb=keras.callbacks.EarlyStopping(patience=2,restore_best_weights=True)
-- 손실값 이미지 비교, 어느 epoch에서 멈췄는지 보기 
-- 최고 모델 불러와 검증세트 평가-> x_test[:5]예측하고 정답과 비교 -> 테스트 세트 평가
 
-#####
-위에꺼 class로 해서 하기(이때 class는 input_shape안들어가고 당연히 model.summary)해도 빈칸으로 나옴 but fit하고 summary하면 나옴!!!!!!!!!!!!!!!!!!!
-그 후 CNN말고는 다 class로 하면됨
-#####
+1-1. 회귀
+- tensorflow의 sequential로 
+data=pd.read_csv('../machine_learning/perch_3v.csv')얘로 회귀해보기  ->  invere_transform하고 나온 y값으로 r2-score계산한게 맞는거임
 
-- data=pd.read_csv('../machine_learning/perch_3v.csv')얘로 회귀해보기 
-    ->  invere_transform하고 나온 y값으로 r2-score계산한게 맞는거임
-#####
-pytorch로도 하기!!!!!
+- pytorch로도 동일하게 진행(class로)
+
+####
 torch, torch.nn, torch.optim이면 모든게 해결!!!!!!
+####
+
+1-2. 분류
+fish=pd.read_csv('../machine_learning/fish_7species.csv') 예로 분류해보기
+-pytorch로
+  이진분류 손실함수코드는????
+
+- tensorflow로 fish concat버전
+fish df를 x1(2,3번컬럼), x2(4,5,6번컬럼)두개의 입력으로 나눠서 x1은 64->32->16, x2는 64->32하고 내부에서 concat해서 64->16->7로
+
+#####
+위이때 class는 input_shape안들어가고 당연히 model.summary해도 빈칸으로 나옴 but fit하고 summary하면 나옴!!!!!!!!!!!!!!!!!!!
 #####
 
 
-###############
-1. pytorch로만 해보기(분류)!!!!!!!!!!!!
-fish=pd.read_csv('../machine_learning/fish_7species.csv') 예로 분류해보기
-이진분류 손실함수코드는????
 
-2. fish df를 x1(2,3번컬럼), x2(4,5,6번컬럼)두개의 입력으로 나눠서 x1은 64->32->16, x2는 64->32하고 내부에서 concat해서 64->16->7로
-###############
 
-2. CNN
+
+2. CNN을 함수형 api로!!!
 -(x_train,y_train),(x_test,y_test)=keras.datasets.fashion_mnist.load_data()
+-> 10개 이미지화
 -> 데이터 전처리 ->train세트에서 20% validation 세트 분리
 -> 1D, 2D, 3D에 들어가기 위한 데이터 크기와 input_shape은?
 -> CNN층의 파라미터 6개는? 가능한 풀링층 2개는?
@@ -44,7 +41,7 @@ fish=pd.read_csv('../machine_learning/fish_7species.csv') 예로 분류해보기
 -> 파라미터 개수 계산 -> 학습 밑에꺼 넣어서
   checkpoint_cb = keras.callbacks.ModelCheckpoint('best-cnn-model.keras',save_best_only=True)
   early_stopping_cb = keras.callbacks.EarlyStopping(patience=2,restore_best_weights=True)
--> 손실그래프 그리기 ->베스트모델 가져오기-> 검증세트 평가 -> x_val[0]예측, y_val과 비교 -> 테스트 세트 검증
+-> 손실그래프 그리기 -> 어느 epoch에서 멈췄는지 보기  -> 베스트모델 가져오기-> 검증세트 평가 -> x_val[0]예측, y_val과 비교 -> 테스트 세트 검증
 -> 가중치 시각화 하기: 첫번째 층으로 -> 가중치의 shape과 의미는? 
 fig, axs = plt.subplots(2, 16, figsize=(15,2))
 for i in range(2):
