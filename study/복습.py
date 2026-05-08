@@ -10,6 +10,7 @@ data=pd.read_csv('../machine_learning/perch_3v.csv')얘로 회귀해보기  ->  
 
 ####
 torch, torch.nn, torch.optim이면 모든게 해결!!!!!!
+추가로 import torch.nn.functional as f하면 더 편함
 ####
 
 1-2. 분류
