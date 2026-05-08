@@ -7,6 +7,7 @@ early_stopping_cb = keras.callbacks.EarlyStopping(patience=2,restore_best_weight
 data=pd.read_csv('../machine_learning/perch_3v.csv')얘로 회귀해보기  ->  invere_transform하고 나온 y값으로 r2-score계산한게 맞는거임
 
 - pytorch로도 동일하게 진행(class로)
+@@ 이때 데이터는 어떻게 x,y각각 변환해줘야할까????          ->                                                                                                                                           x_train=torch.tensor(x_train, dtype=torch.float32)   y의 경우 1.회귀면 y_train=torch.tensor(y_train, dtype=torch.float32)    2.분류여서 Labelencoding된거 넣을려면 y_train = torch.tensor(y_train, dtype=torch.long)
 
 ####
 torch, torch.nn, torch.optim이면 모든게 해결!!!!!!
